@@ -9,8 +9,9 @@ export const Styles = StyleSheet.create({
 
   title: {
     fontWeight: "700",
-    fontSize: 30,
+    fontSize: 20,
     marginBottom: 10,
+    marginTop: 20,
   },
 
   recipe: {
@@ -27,5 +28,14 @@ export const Styles = StyleSheet.create({
     fontSize: 15,
     marginBottom: 5,
     textAlign: "center",
+  },
+
+  input: {
+    width: 300,
+    height: 40,
+    textAlign: "center",
+    borderWidth: 2,
+    borderRadius: 30,
+    marginBottom: 5,
   },
 });
