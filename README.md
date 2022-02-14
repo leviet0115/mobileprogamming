@@ -4,3 +4,6 @@ Current Progress:
 
 - React Native Basic
 - Navigation
+- Networking Recipe
+
+if you type expo start, it will run the latest assignment. 
