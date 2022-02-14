@@ -1,17 +1,42 @@
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Calculator from "./Calculator";
-import History from "./History";
+import { useEffect, useState } from "react";
+import { FlatList, Text, View } from "react-native";
+import Recipe from "./Recipe";
+import { Styles } from "./Styles";
 
 export default function App() {
-  const Stack = createNativeStackNavigator();
+  const [recipes, setRecipes] = useState([]);
+  useEffect(() => {
+    fetch("https://www.themealdb.com/api/json/v1/1/search.php?s=pork")
+      .then((res) => res.json())
+      .then((data) =>
+        setRecipes(
+          data.meals.map((meal) => {
+            return {
+              id: meal.idMeal,
+              name: meal.strMeal,
+              image: meal.strMealThumb,
+            };
+          })
+        )
+      );
+  }, []);
 
-  return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Calulator" component={Calculator} />
-        <Stack.Screen name="History" component={History} />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+  if (recipes.length === 0) {
+    return (
+      <View style={Styles.container}>
+        <Text>Loading...</Text>
+      </View>
+    );
+  } else {
+    console.log(recipes);
+    return (
+      <View style={Styles.container}>
+        <Text style={Styles.title}>Random Pork Recipes</Text>
+        <FlatList
+          data={recipes}
+          renderItem={({ item }) => <Recipe recipe={item} />}
+        ></FlatList>
+      </View>
+    );
+  }
 }
