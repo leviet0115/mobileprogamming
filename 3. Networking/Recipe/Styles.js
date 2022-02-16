@@ -17,6 +17,7 @@ export const Styles = StyleSheet.create({
   recipe: {
     alignItems: "center",
   },
+
   image: {
     width: 200,
     height: 200,
