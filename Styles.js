@@ -3,8 +3,14 @@ import { StyleSheet } from "react-native";
 export const Styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#fff",
     alignItems: "center",
-    marginTop: 50,
+    marginTop: "10%",
+  },
+
+  map: {
+    width: "100%",
+    height: "50%",
   },
 
   title: {
@@ -30,7 +36,7 @@ export const Styles = StyleSheet.create({
   },
 
   input: {
-    width: 100,
+    width: "80%",
     height: 40,
     textAlign: "center",
     borderWidth: 1,
