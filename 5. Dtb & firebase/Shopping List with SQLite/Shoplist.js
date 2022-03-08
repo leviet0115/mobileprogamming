@@ -1,4 +1,6 @@
 import { View, TextInput, Button, FlatList, Text } from "react-native";
+import { initializeApp } from "firebase/app";
+import { getDatabase, push, ref, onValue } from "firebase/database";
 import React from "react";
 import * as SQLite from "expo-sqlite";
 import { Styles } from "./Styles";
