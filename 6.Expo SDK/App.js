@@ -36,7 +36,6 @@ const App = () => {
 
   return (
     <View style={Styles.container}>
-      <Button title="Get contacts" onPress={getContact}></Button>
       {contacts.length === 0 ? null : (
         <FlatList
           data={contacts}
@@ -44,6 +43,8 @@ const App = () => {
           keyExtractor={({ index }) => index}
         />
       )}
+
+      <Button title="Get contacts" onPress={getContact}></Button>
     </View>
   );
 };
