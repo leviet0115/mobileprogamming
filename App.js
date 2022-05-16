@@ -1,16 +1,16 @@
 import { View, TextInput, Button, FlatList, Text } from "react-native";
 import React from "react";
-import * as SQLite from "expo-sqlite";
 import { Styles } from "./Styles";
 import { initializeApp } from "firebase/app";
-import { getDatabase, push, ref, onValue } from "firebase/database";
+import { getDatabase, ref, set, onValue } from "firebase/database";
+import uuid from "react-native-uuid";
+import { async } from "@firebase/util";
+import { isAsyncDebugging } from "react-native/Libraries/Utilities/DebugEnvironment";
 
 const App = () => {
   const [prod, setProd] = React.useState("");
   const [amt, setAmt] = React.useState("");
   const [list, setList] = React.useState([]);
-
-  const db = SQLite.openDatabase("shoplistdb.db");
 
   const firebaseConfig = {
     apiKey: "AIzaSyBNbOQorWjiEHsnTiL4mcR8sshAOI8WbJs",
@@ -24,28 +24,23 @@ const App = () => {
   };
 
   const app = initializeApp(firebaseConfig);
-  const database = getDatabase(app);
+  const db = getDatabase(app);
 
   React.useEffect(() => {
-    const itemsRef = ref(database, "items/");
-    onValue(itemsRef, (snapshot) => {
+    const itemRef = ref(db, "items/");
+    onValue(itemRef, (snapshot) => {
       const data = snapshot.val();
       setList(Object.values(data));
     });
   }, []);
 
-  const saveItem = () => {
-    push(ref(database, "items/"), { product: product, amount: amount });
-  };
-
-  const deleteItem = (id) => {
-    db.transaction(
-      (tx) => {
-        tx.executeSql("delete from shoplist where id = ?;", [id]);
-      },
-      null,
-      updateList
-    );
+  const saveItem = async () => {
+    const id = prod + amt + Date.now().toString();
+    const res = await set(ref(db, "items/" + id), {
+      amt,
+      prod,
+      id,
+    });
   };
 
   return (
@@ -53,27 +48,31 @@ const App = () => {
       <TextInput
         placeholder="Product"
         value={prod}
-        onChangeText={setProd}
+        onChangeText={(text) => setProd(text)}
         style={Styles.input}
       />
       <TextInput
         placeholder="Amount"
         valu={amt}
-        onChangeText={setAmt}
+        onChangeText={(text) => setAmt(text)}
         style={Styles.input}
       />
       <Button title="Save" onPress={saveItem}></Button>
       <FlatList
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <View style={Styles.row}>
-            <Text>
-              {item.product}, {item.amount}
-            </Text>
-          </View>
-        )}
         data={list}
+        renderItem={(item) => <Item item={item.item} />}
+        keyExtractor={(item, index) => index}
+        contentContainerStyle={{ marginTop: 10 }}
       />
+    </View>
+  );
+};
+
+const Item = ({ item }) => {
+  return (
+    <View style={Styles.row}>
+      <Text>{item.prod}, </Text>
+      <Text>{item.amt}</Text>
     </View>
   );
 };
